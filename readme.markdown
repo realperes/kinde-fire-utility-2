@@ -19,6 +19,6 @@ Under-Construction
 * [Jared631](https://github.com/Jared631) - Main Developer.
  
 ## External Tools
-* Setup (https://github.com/Jared631/kinde-fire-utility-2/auto-free-twrp-source) Used for bootloader and recovery.
+* Setup (https://github.com/Jared631/kinde-fire-utility-2/tree/master/auto-free-twrp-source) Used for bootloader and recovery.
 	
 ### Under-Construction
