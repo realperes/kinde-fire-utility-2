@@ -5,7 +5,7 @@ Root and install bootloader and recovery on the Kindle Fire 2.
 Under-Construction
 
 ## Version
-0.1A
+0.2A
 
 ## Features
 - General
