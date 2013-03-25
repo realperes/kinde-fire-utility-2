@@ -1,0 +1,15 @@
+<convert2exe>
+    <path>C:\Users\rainbowdash\Desktop\winget-dl\winget-dl.exe</path>
+    <uacLevel>asInvoker</uacLevel>
+    <icon></icon>
+    <mode>cscript</mode>
+    <silent>no</silent>
+    <unicode>yes</unicode>
+    <build>32bit</build>
+    <details>
+        <version>1.1.0.0</version>
+        <description>File Downloader in VBS.</description>
+        <productName>winget-dl</productName>
+        <copyright>Copyright (C) 2013 RDASHINC - RDCODING</copyright>
+    </details>
+</convert2exe>
