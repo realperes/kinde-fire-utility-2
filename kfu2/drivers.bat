@@ -41,6 +41,7 @@ set ADB=bin\adb.exe
 set READ_INI=bin\read_ini.exe
 
 :INSTALL_DRIVERS
+	CALL kfu2.bat --call :read_ini 1>nul 2>nul
 	echo Calling kfu2.bat --install-drivers...
 	CALL kfu2.bat --install-drivers
 	echo ----------------------------------------

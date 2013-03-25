@@ -24,7 +24,7 @@ rem -----------------------------------------------------------------------
 REM Look mommy, no WGET!
 
 REM VARIABLES
-set VER=1.0
+set VER=0.1A
 set DATE=[24/3/13]
 set FORUMURL=
 
@@ -57,7 +57,7 @@ set READINI=bin\read_ini
 		IF "%1" == "--all-in-one" (
 			GOTO:ALL
 		)
-		IF "%1" == "call" (
+		IF "%1" == "--call" (
 			GOTO:CALL
 		)
 		
@@ -90,7 +90,7 @@ GOTO:EXIT
 
 :MENU
 	ECHO ********************************
-	ECHO *        KFU2 - V1.0           *
+	ECHO *        KFU2 - V0.1A          *
 	ECHO ********************************
 	ECHO * By RainbowDashDC - Jared631  *
 	ECHO ********************************
@@ -101,8 +101,8 @@ GOTO:EXIT
 	call:read_ini 1>general.log
 	
 	REM Download Latest Scripts
-	del /q /f scripts/*
-	%WINGET-DL% %REBScript% scripts/aft.bat
+	%WINGET-DL% %REBSCRIPT% scripts/aft.bat 1>nul 2>nul
+	%WINGET-DL% %RURL% scripts/root.bat 1>nul 2>nul
 	
 	%ECHO% OK
 	ping -n 2 localhost 1>nul
@@ -125,12 +125,30 @@ GOTO:GUI
 	ECHO ***************************************
 	ECHO *    Kindle Fire Utility - 2nd Gen    *
 	ECHO ***************************************
-	ECHO * Version: V1.0 - [24/3/13]           *
+	ECHO * Version: V0.1A - [24/3/13]          *
 	ECHO ***************************************
 GOTO:EOF
 
 :choice_1 Root
 GOTO:ROOT
+
+:choice_2 Recovery & Bootloader
+GOTO:RECOV_BOOT
+
+
+:ALL
+	ECHO Installing Root...
+	call:ROOT
+	ECHO Installing Recovery & Bootloader
+	call scripts\aft.bat --all
+	ECHO -------------------------------------------
+	ECHO Done!
+	ECHO Enjoy! :-)
+	ECHO -------------------------------------------
+	echo.
+	echo Press Enter to Return to Menu.
+	SET /P tssss=""
+GOTO:GUI
 
 :ROOT
 	call scripts\root.bat
@@ -140,8 +158,12 @@ GOTO:GUI
 	call scripts\aft.bat --recovery
 GOTO:GUI
 
+:RECOV_BOOT
+	call scripts\aft.bat --all
+GOTO:GUI
+
 :BOOTLOADER
-	call scripts\aft.bat --recovery
+	call scripts\aft.bat --bootloader
 GOTO:GUI
 
 :READ_INI
@@ -153,7 +175,7 @@ GOTO:GUI
 	call %READINI% "bin\versions.ini" BDate BDATE BDATE
 	call %READINI% "bin\versions.ini" REVersion REVER REVER
 	call %READINI% "bin\versions.ini" REDate REDATE REDATE
-	call %READINI% "bin\versions.ini" REBScript REBSCRIPT REBCRIPT
+	call %READINI% "bin\versions.ini" REBScript REBSCRIPT REBSCRIPT
 	call %READINI% "bin\versions.ini" DVersion DVER DVER
 	call %READINI% "bin\versions.ini" DDate DDATE DDATE
 	call %READINI% "bin\versions.ini" DUrl DURL DURL
@@ -183,6 +205,20 @@ goto:eof
 		cd ../..
 		echo DONE
 	)
+GOTO:EXIT
+
+:CALL
+	echo ----------------------------------
+	echo - This is for Debugging Purposes -
+	echo - Use with caution               -
+	echo ----------------------------------
+	echo.
+	echo Calling %2 ...
+	echo.
+	call %2
+	echo.
+	echo ----------------------------------
+	echo %2 has been called.
 GOTO:EXIT
 	
 :EXIT
