@@ -99,7 +99,7 @@ GOTO:EXIT
 	echo.	--root                        Install Root.
 	echo.	--all-in-one                  Install Root, Bootloader, and Recovery.
 	echo.
-	%ECHO% Bug reports and suggestions: [%FORUMURL%]
+	echo Bug reports and suggestions: [%FORUMURL%]
 	if "%e%" == "1" echo. && echo Error: %errmsg%
 GOTO:EXIT
 
