@@ -24,9 +24,9 @@ rem -----------------------------------------------------------------------
 REM Look mommy, no WGET!
 
 REM VARIABLES
-set VER=0.1A
+set VER=0.2A
 set DATE=[24/3/13]
-set FORUMURL=
+set FORUMURL=http://goo.gl/B93F5
 
 set KFU_BIN=bin/
 set KFU_SCRIPTS=scripts/
@@ -36,6 +36,10 @@ set ECHO=bin\echo
 set WINGET-DL=bin\winget-dl.exe
 set ADB=bin\adb.exe
 set READINI=bin\read_ini
+
+REM Clear old errmsgs
+set e=
+set errmsg=
 
 :LOOP
 	IF NOT "%1" == "" (
@@ -60,6 +64,9 @@ set READINI=bin\read_ini
 		IF "%1" == "--call" (
 			GOTO:CALL
 		)
+		IF "%1" == "--version" (
+			GOTO:VERSION
+		)
 		
 		set errmsg=%1 is not a valid switch
 		set e=1
@@ -68,6 +75,14 @@ set READINI=bin\read_ini
 		GOTO:MENU
 	)
 GOTO:MENU
+
+:VERSION
+	echo RDC - Kindle Fire Utility 2 (KFU2) - V%VER%
+	echo.
+	echo Version: %VER% - %DATE%
+	echo.
+	echo Do --help for more information.
+GOTO:EXIT
 
 :HELP
 	echo RDC - Kindle Fire Utility 2 - %VER%
@@ -90,7 +105,7 @@ GOTO:EXIT
 
 :MENU
 	ECHO ********************************
-	ECHO *        KFU2 - V0.1A          *
+	ECHO *        KFU2 - V0.2A          *
 	ECHO ********************************
 	ECHO * By RainbowDashDC - Jared631  *
 	ECHO ********************************
@@ -104,7 +119,7 @@ GOTO:EXIT
 	%WINGET-DL% %REBSCRIPT% scripts/aft.bat 1>nul 2>nul
 	%WINGET-DL% %RURL% scripts/root.bat 1>nul 2>nul
 	
-	%ECHO% OK
+	ECHO OK
 	ping -n 2 localhost 1>nul
 	CLS
 GOTO:GUI
@@ -112,7 +127,7 @@ GOTO:GUI
 :GUI
 	CALL:HEADER
 
-	::Load up our menu selections
+	REM Loadup teh menu.
 	for /f "tokens=1,2,* delims=_ " %%A in ('"findstr /b /c:":choice_" "%~f0""') do echo.  %%B  %%C
 	
 
@@ -125,7 +140,7 @@ GOTO:GUI
 	ECHO ***************************************
 	ECHO *    Kindle Fire Utility - 2nd Gen    *
 	ECHO ***************************************
-	ECHO * Version: V0.1A - [24/3/13]          *
+	ECHO * Version: V0.2A - [24/3/13]          *
 	ECHO ***************************************
 GOTO:EOF
 
