@@ -1,4 +1,4 @@
-# WIN-GET
+# Kindle Fire Utility 2
 Root and install bootloader and recovery on the Kindle Fire 2.
 
 ## Description
