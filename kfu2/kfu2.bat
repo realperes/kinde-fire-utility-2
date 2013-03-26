@@ -204,6 +204,18 @@ goto:eof
 		cd temp/kf2d
 		START /WAIT kfadbdrivers.exe
 		cd ../..
+		echo Editing "%APPDATA%/.android/adb_usb.ini"
+		IF EXIST "%APPDATA%/.android/adb_usb.ini" (
+			%GREP% "%APPDATA%/.android/adb_usb.ini" "0x1949"
+			IF "%ERRORLEVEL%" == "0" echo 0x1949 "%APPDATA%/.android/adb_usb.ini"
+		IF NOT EXIST "%APPDATA%/.android/" (
+			mkdir "%APPDATA%/.android/"
+			echo # ANDROID 3RD PARTY USB VENDOR ID LIST -- DO NOT EDIT. >> "%APPDATA%/.android/adb_usb.ini"
+			echo # USE 'android update adb' TO GENERATE. >> "%APPDATA%/.android/adb_usb.ini"
+			echo # 1 USB VENDOR ID PER LINE. >> "%APPDATA%/.android/adb_usb.ini"
+			echo 0x1949 >> "%APPDATA%/.android/adb_usb.ini"
+		)
+		echo DONE
 	) else (
 		SET /p "=Downloading Latest Drivers... " <nul
 		IF NOT EXIST "temp" MKDIR temp
@@ -218,6 +230,15 @@ goto:eof
 		cd kf2d
 		START /WAIT kfadbdrivers.exe
 		cd ../..
+		echo Editing "%APPDATA%/.android/adb_usb.ini"
+		IF EXIST "%APPDATA%/.android/adb_usb.ini" echo 0x1949 "%APPDATA%/.android/adb_usb.ini"
+		IF NOT EXIST "%APPDATA%/.android/" (
+			mkdir "%APPDATA%/.android/"
+			echo # ANDROID 3RD PARTY USB VENDOR ID LIST -- DO NOT EDIT. >> "%APPDATA%/.android/adb_usb.ini"
+			echo # USE 'android update adb' TO GENERATE. >> "%APPDATA%/.android/adb_usb.ini"
+			echo # 1 USB VENDOR ID PER LINE. >> "%APPDATA%/.android/adb_usb.ini"
+			echo 0x1949 >> "%APPDATA%/.android/adb_usb.ini"
+		)
 		echo DONE
 	)
 GOTO:EXIT
