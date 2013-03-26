@@ -94,13 +94,13 @@ GOTO:RECOV_BOOT
 	IF "%VERBOSE%" == "1" echo.	- Waiting for Device...
 	stuff\adb\windows\adb wait-for-device
 	IF "%VERBOSE%" == "1" echo.	- Mounting system as writeable.
-	stuff\adb\windows\adb shell su -c "mount -o remount,rw -t ext4 /system /system "
+	stuff\adb\windows\adb shell su -c "mount -o remount,rw -t ext4 /system /system " 1>nul
 	IF "%VERBOSE%" == "1" echo.	- Mounting sdcard as writeable.
-	stuff\adb\windows\adb shell su -c "mount -o remount,rw -t ext4 /sdcard /sdcard " 
+	stuff\adb\windows\adb shell su -c "mount -o remount,rw -t ext4 /sdcard /sdcard " 1>nul
 	IF "%VERBOSE%" == "1" echo.	- Removing /system/etc/install-recovery.sh
-	stuff\adb\windows\adb shell su -c "rm /system/etc/install-recovery.sh"
+	stuff\adb\windows\adb shell su -c "rm /system/etc/install-recovery.sh" 1>nul
 	IF "%VERBOSE%" == "1" echo.	- Removing /system/RECOVERY-AMZN-4430-OTTER2-PROD
-	stuff\adb\windows\adb shell su -c "rm /system/RECOVERY-AMZN-4430-OTTER2-PROD"
+	stuff\adb\windows\adb shell su -c "rm /system/RECOVERY-AMZN-4430-OTTER2-PROD" 1>nul
 	IF "%VERBOSE%" == "1" echo DONE && ECHO.
 	IF NOT "%VERBOSE%" == "1" ECHO OK
 	
@@ -109,38 +109,38 @@ GOTO:RECOV_BOOT
 	IF "%VERBOSE%" == "1" echo.	- Waiting-for-device...
 	stuff\adb\windows\adb wait-for-device
 	IF "%VERBOSE%" == "1" echo.	- Pushing stuff/stack to /sdcard/
-	stuff\adb\windows\adb push stuff/stack /sdcard/
+	stuff\adb\windows\adb push stuff/stack /sdcard/ 1>nul
 	IF "%VERBOSE%" == "1" echo.	- DD'ing if=/sdcard/stack of=/data/local/tmp/stack
-	stuff\adb\windows\adb shell su -c "dd if=/sdcard/stack of=/data/local/tmp/stack"
+	stuff\adb\windows\adb shell su -c "dd if=/sdcard/stack of=/data/local/tmp/stack" 1>nul
 	IF "%VERBOSE%" == "1" echo DONE && ECHO.
 	IF NOT "%VERBOSE%" == "1" ECHO OK
 	
 	set /p "=Inserting stack override to /system... " <nul
 	stuff\adb\windows\adb wait-for-device
-	stuff\adb\windows\adb shell su -c "dd if=/data/local/tmp/stack of=/dev/block/platform/omap/omap_hsmmc.1/by-name/system bs=6519488 seek=1"
+	stuff\adb\windows\adb shell su -c "dd if=/data/local/tmp/stack of=/dev/block/platform/omap/omap_hsmmc.1/by-name/system bs=6519488 seek=1" 1>nul
 	ECHO OK
 	
-	set /p "=Pushing freedom-boot... "
+	set /p "=Pushing freedom-boot... " <nul
 	stuff\adb\windows\adb wait-for-device
-	stuff\adb\windows\adb push stuff/boot.img /sdcard/
+	stuff\adb\windows\adb push stuff/boot.img /sdcard/ 1>nul
 	ECHO OK
 	
-	set /p "=Pushing TeamWinRecoveryProject... "
+	set /p "=Pushing TeamWinRecoveryProject... " <nul
 	stuff\adb\windows\adb wait-for-device
-	stuff\adb\windows\adb push stuff/recovery.img /sdcard/
+	stuff\adb\windows\adb push stuff/recovery.img /sdcard/ 1>nul
 	ECHO OK
 	
-	set /p "=ECHO Writing freedom-boot to /boot via dd... "
+	set /p "=ECHO Writing freedom-boot to /boot via dd... " <nul
 	stuff\adb\windows\adb wait-for-device
-	stuff\adb\windows\adb shell su -c 'dd if=/sdcard/boot.img of=/dev/block/platform/omap/omap_hsmmc.1/by-name/boot'
+	stuff\adb\windows\adb shell su -c 'dd if=/sdcard/boot.img of=/dev/block/platform/omap/omap_hsmmc.1/by-name/boot' 1>nul
 	ECHO OK
 	
-	set /p "=ECHO Writing TWRP to recovery via dd... "
-	stuff\adb\windows\adb wait-for-device
-	stuff\adb\windows\adb shell su -c 'dd if=/sdcard/recovery.img of=/dev/block/platform/omap/omap_hsmmc.1/by-name/recovery'
+	set /p "=ECHO Writing TWRP to recovery via dd... " <nul
+	stuff\adb\windows\adb wait-for-device 1>nul
+	stuff\adb\windows\adb shell su -c 'dd if=/sdcard/recovery.img of=/dev/block/platform/omap/omap_hsmmc.1/by-name/recovery' 1>nul
 	ECHO OK
 	
-	set /p  "=Rebooting... "
+	set /p  "=Rebooting... " <nul
 	stuff\adb\windows\adb wait-for-device
 	stuff\adb\windows\adb shell su -c 'reboot'
 	stuff\adb\windows\adb wait-for-device
