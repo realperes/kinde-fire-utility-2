@@ -27,7 +27,7 @@ set e=
 set VERBOSE=0
 
 REM Details.
-SET VER=1.1
+SET VER=1.2B
 SET DATE=[24/3/2013]
 
 
@@ -86,6 +86,11 @@ GOTO:RECOV_BOOT
 
 
 :RECOV_BOOT
+	echo ******************************
+	echo *       Auto-Free-TWRP       *
+	echo ******************************
+	IF "%VERBOSE%" == "1" echo.	- Verbose Enabled.
+	echo.
 	echo Begin Installer? (Don't worry, it waits for device :) )
 	PAUSE
 	
