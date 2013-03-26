@@ -20,6 +20,7 @@ Under-Construction
 * [VashyPooh] (http://forum.xda-developers.com/member.php?u=2699655) - Uh. I owe this guy SO much, if it wasn't for him I wouldn't have learned batch or any code.
  
 ## External Tools
-* Setup (https://github.com/Jared631/kinde-fire-utility-2/tree/master/auto-free-twrp-source) Used for bootloader and recovery.
+* Freedom-Boot and TWRP Installer (https://github.com/Jared631/kinde-fire-utility-2/tree/master/auto-free-twrp-source) - Used for bootloader and recovery.
+* FREE and TWRP Downstream (https://github.com/Jared631/kinde-fire-utility-2/tree/auto-free-twrp-source) - Stable Versions, stand alones.
 	
 ### Under-Construction
