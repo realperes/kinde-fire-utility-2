@@ -36,6 +36,7 @@ set ECHO=bin\echo
 set WINGET-DL=bin\winget-dl.exe
 set ADB=bin\adb.exe
 set READINI=bin\read_ini
+set VERINI=http://dl.dropbox.com/s/xgbriipynniezth/versions.ini
 
 REM Clear old errmsgs
 set e=
@@ -52,6 +53,14 @@ set errmsg=
 		IF "%1" == "--install-bootloader" (
 			GOTO:BOOTLOADER
 		)
+		IF "%1" == "-v" (
+			echo Using Verbose Output...
+			echo.
+			SET VERBOSE=1
+			
+			REM Temp untill seperate V_LOOP
+			GOTO:MENU
+		)
 		IF "%1" == "--install-recovery" (
 			GOTO:RECOVERY
 		)
@@ -61,7 +70,9 @@ set errmsg=
 		IF "%1" == "--all-in-one" (
 			GOTO:ALL
 		)
-		IF "%1" == "--call" (
+		IF "%1" == "call" (
+			REM Debug function. Don't Use.
+			REM Well, ok, it's Stable. But... Meh.
 			GOTO:CALL
 		)
 		IF "%1" == "--version" (
@@ -98,6 +109,7 @@ GOTO:EXIT
 	echo.	--install-bootloader          Install Bootloader.
 	echo.	--root                        Install Root.
 	echo.	--all-in-one                  Install Root, Bootloader, and Recovery.
+	echo.	-v                            Verbose Output.
 	echo.
 	echo Bug reports and suggestions: [%FORUMURL%]
 	if "%e%" == "1" echo. && echo Error: %errmsg%
@@ -112,15 +124,20 @@ GOTO:EXIT
 	set /p "=Initiallizing... " <nul
 	
 	REM Download Latest Versions.ini
-	%WINGET-DL% http://dl.dropbox.com/s/xgbriipynniezth/versions.ini bin/versions.ini 1>nul 2>nul
+	IF "%VERBOSE%" == "1" echo. && echo.	- Downloading Latest Versions.ini
+	%WINGET-DL% %VERINI% bin/versions.ini 1>nul 2>nul
+	IF "%VERBOSE%" == "1" echo.	- Setting Properites from the Versions.ini
 	call:read_ini 1>general.log
 	
 	REM Download Latest Scripts
+	IF "%VERBOSE%" == "1" echo.	- Downloading Latest AFT.bat and ROOT.bat for Root and ETC
 	%WINGET-DL% %REBSCRIPT% scripts/aft.bat 1>nul 2>nul
 	%WINGET-DL% %RURL% scripts/root.bat 1>nul 2>nul
 	
-	ECHO OK
-	ping -n 2 localhost 1>nul
+	
+	REM Closing Statements...
+	IF "%VERBOSE%" == "1" echo DONE
+	IF NOT "%VERBOSE%" == "1" ECHO OK
 	CLS
 GOTO:GUI
 
@@ -215,7 +232,6 @@ goto:eof
 			echo # 1 USB VENDOR ID PER LINE. >> "%APPDATA%/.android/adb_usb.ini"
 			echo 0x1949 >> "%APPDATA%/.android/adb_usb.ini"
 		)
-		echo DONE
 	) else (
 		SET /p "=Downloading Latest Drivers... " <nul
 		IF NOT EXIST "temp" MKDIR temp
@@ -244,6 +260,31 @@ goto:eof
 GOTO:EXIT
 
 :CALL
+	IF "%2" == "--help" (
+		echo ----------------------------------
+		echo - This is for Debugging Purposes -
+		echo - Use with caution               -
+		echo ----------------------------------
+		echo.
+		echo HELP -[ LIST OF FUNCTIONS ]-
+		echo.
+		echo ----------------------------------
+		for /f "tokens=1,2,*" %%A in ('"findstr /b /c:":" "%~f0""') do echo. %%A %%B  %%C
+		echo ----------------------------------
+		GOTO:EXIT
+	) ELSE (
+		IF "%2" == "" (
+			echo ----------------------------------
+			echo - This is for Debugging Purposes -
+			echo - Use with caution               -
+			echo ----------------------------------
+			echo.
+			echo. E: No Input
+			echo.
+			echo ----------------------------------
+			GOTO:EXIT
+		)
+	)
 	echo ----------------------------------
 	echo - This is for Debugging Purposes -
 	echo - Use with caution               -
