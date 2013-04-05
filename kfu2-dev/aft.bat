@@ -30,7 +30,7 @@ set VERBOSE=0
 
 REM Details.
 SET VER=1.1
-SET DATE=[24/3/2013]
+SET DATE=[02/04/2013]
 
 set KFU_BIN=bin/
 set KFU_SCRIPTS=scripts/
@@ -57,7 +57,7 @@ set READINI=bin\read_ini
 		IF "%1" == "call" (
 			GOTO:CALL
 		)
-		IF "%1" == "--all" (
+		IF "%1" == "all" (
 			GOTO:RECOV_BOOT
 		)
 		
@@ -103,6 +103,10 @@ GOTO:RECOV_BOOT
 
 
 :RECOV_BOOT
+	echo AFT (C) 2013 RDCODING V%VER%
+	echo By RainbowDashDC && FMKillo
+	echo -----------------------------------
+	echo.
 	echo Begin Installer? (Don't worry, it waits for device :) )
 	PAUSE
 	
@@ -178,8 +182,32 @@ GOTO:DONE
 	PAUSE
 GOTO:EXIT
 
-
 :CALL
+	IF "%2" == "--help" (
+		echo ----------------------------------
+		echo - This is for Debugging Purposes -
+		echo - Use with caution               -
+		echo ----------------------------------
+		echo.
+		echo HELP -[ LIST OF FUNCTIONS ]-
+		echo.
+		echo ----------------------------------
+		for /f "tokens=1,2,*" %%A in ('"findstr /b /c:":" "%~f0""') do echo. %%A %%B  %%C
+		echo ----------------------------------
+		GOTO:EXIT
+	) ELSE (
+		IF "%2" == "" (
+			echo ----------------------------------
+			echo - This is for Debugging Purposes -
+			echo - Use with caution               -
+			echo ----------------------------------
+			echo.
+			echo. E: No Input
+			echo.
+			echo ----------------------------------
+			GOTO:EXIT
+		)
+	)
 	echo ----------------------------------
 	echo - This is for Debugging Purposes -
 	echo - Use with caution               -
