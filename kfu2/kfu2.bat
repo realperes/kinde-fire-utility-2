@@ -25,7 +25,7 @@ REM Look mommy, no WGET!
 
 REM VARIABLES
 set VER=0.2A
-set DATE=[24/3/13]
+set DATE=[24/6/13]
 set FORUMURL=http://goo.gl/B93F5
 
 set KFU_BIN=bin/
@@ -33,14 +33,48 @@ set KFU_SCRIPTS=scripts/
 
 REM TOOLS
 set ECHO=bin\echo
+SET WGET=bin\wget
 set WINGET-DL=bin\winget-dl.exe
 set ADB=bin\adb.exe
 set READINI=bin\read_ini
+SET XMLPARSE=bin\xml.bat
+SET AWK=bin\awk.exe
+SET XMLPARSEAWK=bin\xmlparse.awk
 set VERINI=http://dl.dropbox.com/s/xgbriipynniezth/versions.ini
 
 REM Clear old errmsgs
 set e=
 set errmsg=
+
+
+ rem Disclaimer
+ cls
+ color 4
+ echo -----------------------------------------------------
+ echo -              DISCLAIMER - V  1.2                  -
+ echo -----------------------------------------------------
+ echo * 
+ echo * include std_disclaimer
+ echo *
+ echo * Your warranty is now void.
+ echo *
+ echo * I am not responsible for bricked devices, dead SD cards,
+ echo * thermonuclear war, or you getting fired because the alarm app failed. Please
+ echo * do some research if you have any concerns about features included in this
+ echo * Utility before using it! YOU are choosing to make these modifications, and if
+ echo * you point the finger at me for messing up your device, I will laugh at you.
+ echo *
+ echo ------------------------------------------------------
+ echo - By Continuing you agree to these terms.            -
+ echo - I higly suggest you have a fastboot cable on hand. -
+ echo ------------------------------------------------------
+ SET /P choice_disc="Continue? [Y/n]: "
+ IF "%choice_disc%" == "n" cls && color && EXIT /B
+ IF "%choice_disc%" == "N" cls && color && EXIT /B
+ 
+ REM RESET COLOR 
+ color
+ 
 
 :LOOP
 	IF NOT "%1" == "" (
@@ -48,6 +82,7 @@ set errmsg=
 			GOTO:HELP
 		)
 		IF "%1" == "--install-drivers" (
+			CALL:READ_INI 1>nul
 			GOTO:DRIVERS
 		)
 		IF "%1" == "--install-bootloader" (
@@ -116,6 +151,7 @@ GOTO:EXIT
 GOTO:EXIT
 
 :MENU
+	cls
 	ECHO ********************************
 	ECHO *        KFU2 - V0.2A          *
 	ECHO ********************************
@@ -157,7 +193,7 @@ GOTO:GUI
 	ECHO ***************************************
 	ECHO *    Kindle Fire Utility - 2nd Gen    *
 	ECHO ***************************************
-	ECHO * Version: V0.2A - [24/3/13]          *
+	ECHO *      Version: V0.2A - [24/3/13]     *
 	ECHO ***************************************
 GOTO:EOF
 
@@ -167,8 +203,14 @@ GOTO:ROOT
 :choice_2 Recovery & Bootloader
 GOTO:RECOV_BOOT
 
+:choice_3 KFU2 Drivers (Install)
+call kfu2 --install-drivers
+EXIT /B
+
 
 :ALL
+	ECHO Installing Drivers...
+	call kfu2 --install-drivers
 	ECHO Installing Root...
 	call:ROOT
 	ECHO Installing Recovery & Bootloader
@@ -217,46 +259,56 @@ GOTO:GUI
 goto:eof
 
 :DRIVERS
-	IF EXIST temp/kf2d/kfadbdrivers.exe (
-		cd temp/kf2d
-		START /WAIT kfadbdrivers.exe
-		cd ../..
-		echo Editing "%APPDATA%/.android/adb_usb.ini"
-		IF EXIST "%APPDATA%/.android/adb_usb.ini" (
-			%GREP% "%APPDATA%/.android/adb_usb.ini" "0x1949"
-			IF "%ERRORLEVEL%" == "0" echo 0x1949 "%APPDATA%/.android/adb_usb.ini"
-		IF NOT EXIST "%APPDATA%/.android/" (
-			mkdir "%APPDATA%/.android/"
-			echo # ANDROID 3RD PARTY USB VENDOR ID LIST -- DO NOT EDIT. >> "%APPDATA%/.android/adb_usb.ini"
-			echo # USE 'android update adb' TO GENERATE. >> "%APPDATA%/.android/adb_usb.ini"
-			echo # 1 USB VENDOR ID PER LINE. >> "%APPDATA%/.android/adb_usb.ini"
-			echo 0x1949 >> "%APPDATA%/.android/adb_usb.ini"
-		)
-	) else (
-		SET /p "=Downloading Latest Drivers... " <nul
-		IF NOT EXIST "temp" MKDIR temp
-		%WINGET-DL% %DURL% temp/Drivers.zip 1>nul 2>nul || echo FAIL && echo E: Failed to Download Drivers. && GOTO:EXIT
-		echo OK
-		cd temp
-		SET /p "=Extracting Latest Drivers... " <nul
-		..\bin\7z.exe x Drivers.zip 1>nul 2>nul || echo FAIL && echo E: Failed to Extract Drivers. && GOTO:EXIT
-		echo OK
-		del /q /f Drivers.zip
+GOTO:DRIV
+
+:DRIV
+	%ECHO% "Installing Drivers..." [%TIME%] >> general.log
+	IF EXIST "temp\kf2d" (
 		echo Starting Installer...
-		cd kf2d
+		pushd "temp\kf2d"
 		START /WAIT kfadbdrivers.exe
-		cd ../..
+		popd
 		echo Editing "%APPDATA%/.android/adb_usb.ini"
-		IF EXIST "%APPDATA%/.android/adb_usb.ini" echo 0x1949 "%APPDATA%/.android/adb_usb.ini"
+		IF EXIST "%APPDATA%/.android/adb_usb.ini" %ECHO% "0x1949" >> "%APPDATA%/.android/adb_usb.ini"
 		IF NOT EXIST "%APPDATA%/.android/" (
-			mkdir "%APPDATA%/.android/"
-			echo # ANDROID 3RD PARTY USB VENDOR ID LIST -- DO NOT EDIT. >> "%APPDATA%/.android/adb_usb.ini"
-			echo # USE 'android update adb' TO GENERATE. >> "%APPDATA%/.android/adb_usb.ini"
-			echo # 1 USB VENDOR ID PER LINE. >> "%APPDATA%/.android/adb_usb.ini"
-			echo 0x1949 >> "%APPDATA%/.android/adb_usb.ini"
+			%ECHO% "%APPDATA%/.android/"
+			%ECHO% "# ANDROID 3RD PARTY USB VENDOR ID LIST -- DO NOT EDIT." >> "%APPDATA%/.android/adb_usb.ini"
+			%ECHO% "# USE 'android update adb' TO GENERATE." >> "%APPDATA%/.android/adb_usb.ini"
+			%ECHO% "# 1 USB VENDOR ID PER LINE." >> "%APPDATA%/.android/adb_usb.ini"
+			%ECHO% "0x1949" >> "%APPDATA%/.android/adb_usb.ini"
 		)
 		echo DONE
+		GOTO:EXIT
 	)
+	SET /p "=Downloading Latest Drivers... " <nul
+	IF NOT EXIST "temp" MKDIR temp
+	%WGET% -O temp/Drivers.zip "%DURL%" 1>nul 2>nul || echo FAIL && echo E: Failed to Download Drivers. && EXIT /B 2
+	echo OK
+	cd temp
+	SET /p "=Extracting Latest Drivers... " <nul
+	..\bin\7z.exe x Drivers.zip 1>nul 2>nul || echo FAIL && echo E: Failed to Extract Drivers. && EXIT /B 3
+	echo OK
+	del /q /f Drivers.zip
+	echo Starting Installer...
+	cd kf2d
+	START /WAIT kfadbdrivers.exe
+	cd ../..
+	echo Editing "%APPDATA%/.android/adb_usb.ini"
+	IF EXIST "%APPDATA%/.android/adb_usb.ini" %ECHO% "0x1949" >> "%APPDATA%/.android/adb_usb.ini"
+	IF NOT EXIST "%APPDATA%/.android/" (
+		%ECHO% "%APPDATA%/.android/"
+		%ECHO% "# ANDROID 3RD PARTY USB VENDOR ID LIST -- DO NOT EDIT." >> "%APPDATA%/.android/adb_usb.ini"
+		%ECHO% "# USE 'android update adb' TO GENERATE." >> "%APPDATA%/.android/adb_usb.ini"
+		%ECHO% "# 1 USB VENDOR ID PER LINE." >> "%APPDATA%/.android/adb_usb.ini"
+		%ECHO% "0x1949" >> "%APPDATA%/.android/adb_usb.ini"
+	)
+	%ECHO% "Done - Success" >> general.log
+	echo DONE
+	GOTO:EXIT
+	
+	%ECHO% "Done - Fail" >> general.log
+	echo E: Unspecified Error has Occured.
+	EXIT /B 1
 GOTO:EXIT
 
 :CALL
